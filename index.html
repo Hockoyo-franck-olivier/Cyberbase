@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="Images/logo/apple-touch-icon.png">
+<!-- Progressive Web App : installable sur téléphone -->
+<link rel="manifest" href="manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CyberBase">
+<title>CyberBase — Apprenez la cybersécurité</title>
+<meta name="description" content="Plateforme interactive d'apprentissage des bases de la cybersécurité : cours, quiz et suivi de progression.">
+
+<!-- Favicon (généré à partir du logo ">_" du site) -->
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<meta name="theme-color" content="#0F172A">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="dark">
+
+<!-- ======================= HEADER ======================= -->
+<header class="site-header">
+  <div class="header-inner">
+    <button class="logo" data-target="page-home" aria-label="Retour à l'accueil CyberBase">
+      <span class="logo-mark" aria-hidden="true">&gt;_</span>
+      <span class="logo-text">Cyber<strong>Base</strong></span>
+    </button>
+
+    <nav class="main-nav" aria-label="Navigation principale">
+      <button class="nav-link" data-target="page-home">Accueil</button>
+      <button class="nav-link" data-target="page-dashboard">Mon progrès</button>
+      <div class="nav-dropdown">
+        <button class="nav-link nav-dropdown-toggle" aria-haspopup="true" aria-expanded="false">Séries ▾</button>
+        <div class="nav-dropdown-menu" role="menu">
+          <button class="nav-dropdown-item" data-serie="serie1" role="menuitem">Série 1 · Bases</button>
+          <button class="nav-dropdown-item" data-serie="serie2" role="menuitem">Série 2 · Réseaux</button>
+          <button class="nav-dropdown-item" data-serie="serie3" role="menuitem">Série 3 · Menaces</button>
+          <button class="nav-dropdown-item" data-serie="serie4" role="menuitem">Série 4 · Protection</button>
+          <button class="nav-dropdown-item" data-serie="serie5" role="menuitem">Série 5 · Fondamentaux</button>
+        </div>
+      </div>
+      <button class="nav-link" data-target="page-revisions">Révisions</button>
+      <button class="nav-link nav-link-accent" id="btn-test-final">Test final</button>
+    </nav>
+
+    <div class="header-tools">
+      <button id="btn-sound" class="icon-btn" aria-pressed="true" aria-label="Activer ou couper le son">🔊</button>
+      <button id="btn-theme" class="icon-btn" aria-pressed="false" aria-label="Basculer le mode sombre ou clair">🌙</button>
+      <button class="nav-burger" id="btn-burger" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+    </div>
+  </div>
+
+  <!-- Mobile nav -->
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Navigation mobile" hidden>
+    <button class="nav-link" data-target="page-home">Accueil</button>
+    <button class="nav-link" data-target="page-dashboard">Mon progrès</button>
+    <button class="nav-link" data-serie="serie1">Série 1 · Bases</button>
+    <button class="nav-link" data-serie="serie2">Série 2 · Réseaux</button>
+    <button class="nav-link" data-serie="serie3">Série 3 · Menaces</button>
+    <button class="nav-link" data-serie="serie4">Série 4 · Protection</button>
+    <button class="nav-link" data-serie="serie5">Série 5 · Fondamentaux</button>
+    <button class="nav-link" data-target="page-revisions">Révisions</button>
+    <button class="nav-link nav-link-accent" id="btn-test-final-mobile">Test final</button>
+  </nav>
+</header>
+
+<div class="progress-rail" aria-hidden="true"><div class="progress-rail-fill" id="global-rail-fill"></div></div>
+
+<main id="app">
+
+  <!-- ======================= ACCUEIL ======================= -->
+  <section class="page active" id="page-home" aria-labelledby="home-title">
+    <div class="hero">
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="hero-content">
+        <p class="hero-kicker">Terminal d'apprentissage</p>
+        <h1 id="home-title">Apprenez à penser comme un défenseur.</h1>
+        <p class="hero-lede">Cinq séries, cinquante questions, un test final chronométrable. CyberBase transforme les fondamentaux de la cybersécurité en un parcours interactif que vous progressez à votre rythme, sur ordinateur comme sur mobile.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" id="btn-start">Commencer &rarr;</button>
+          <button class="btn btn-ghost" data-serie="serie1">Voir la série 1</button>
+        </div>
+        <dl class="hero-stats">
+          <div><dt>Séries</dt><dd>5</dd></div>
+          <div><dt>Questions</dt><dd>50</dd></div>
+          <div><dt>Test final</dt><dd>20 questions</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="home-series-grid">
+      <h2>Choisissez une série</h2>
+      <div class="series-cards" id="home-series-cards"><!-- injecté en JS --></div>
+    </div>
+  </section>
+
+  <!-- ======================= TABLEAU DE BORD ======================= -->
+  <section class="page" id="page-dashboard" aria-labelledby="dash-title">
+    <h1 id="dash-title">Tableau de bord</h1>
+    <p class="page-lede">Votre progression est enregistrée automatiquement sur cet appareil.</p>
+
+    <div class="dashboard-grid">
+      <div class="stat-card">
+        <span class="stat-label">Progression globale</span>
+        <div class="stat-ring-wrap">
+          <svg class="stat-ring" viewBox="0 0 120 120" aria-hidden="true">
+            <circle class="stat-ring-bg" cx="60" cy="60" r="52"></circle>
+            <circle class="stat-ring-fill" id="ring-progress" cx="60" cy="60" r="52"></circle>
+          </svg>
+          <span class="stat-ring-value" id="stat-progress-pct">0%</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Séries terminées</span>
+        <span class="stat-number" id="stat-series-done">0 / 5</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Score global</span>
+        <span class="stat-number" id="stat-global-score">0%</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Temps passé</span>
+        <span class="stat-number" id="stat-time-spent">0 min</span>
+      </div>
+    </div>
+
+    <div class="dashboard-columns">
+      <div class="dashboard-panel">
+        <h2>Vos badges</h2>
+        <div class="badges-row" id="badges-row"><!-- injecté en JS --></div>
+      </div>
+      <div class="dashboard-panel">
+        <h2>Notions à revoir</h2>
+        <ul class="review-list" id="notions-a-revoir"><li class="empty-state">Rien à revoir pour l'instant — bravo !</li></ul>
+      </div>
+    </div>
+
+    <div class="dashboard-panel">
+      <h2>Détail par série</h2>
+      <div class="series-progress-list" id="series-progress-list"><!-- injecté en JS --></div>
+    </div>
+
+    <div class="dashboard-panel" id="certificate-panel" hidden>
+      <h2>Certificat de réussite</h2>
+      <p>Vous avez obtenu plus de 80&nbsp;% au test final. Générez votre certificat !</p>
+      <button class="btn btn-primary" id="btn-view-certificate">Voir mon certificat</button>
+    </div>
+  </section>
+
+  <!-- ======================= QUIZ (séries + test final) ======================= -->
+  <section class="page" id="page-quiz" aria-labelledby="quiz-title">
+    <div class="quiz-header">
+      <button class="btn btn-ghost btn-small" id="btn-quiz-quit">&larr; Quitter</button>
+      <h1 id="quiz-title">Série</h1>
+      <div class="quiz-header-right">
+        <label class="timer-toggle">
+          <input type="checkbox" id="timer-toggle"> Chronomètre
+        </label>
+        <div class="quiz-timer" id="quiz-timer" hidden>⏱ <span id="quiz-timer-value">00:45</span></div>
+      </div>
+    </div>
+
+    <div class="quiz-progressbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="quiz-progressbar">
+      <div class="quiz-progressbar-fill" id="quiz-progressbar-fill"></div>
+    </div>
+    <p class="quiz-meta"><span id="quiz-position">Question 1 / 10</span> &middot; <span id="quiz-score-live">Score : 0</span></p>
+
+    <div class="quiz-card" id="quiz-card">
+      <h2 class="quiz-question" id="quiz-question"></h2>
+      <div class="quiz-options" id="quiz-options" role="radiogroup" aria-labelledby="quiz-question"></div>
+
+      <div class="quiz-feedback" id="quiz-feedback" hidden role="status">
+        <p class="quiz-feedback-title" id="quiz-feedback-title"></p>
+        <p class="quiz-feedback-text" id="quiz-feedback-text"></p>
+      </div>
+    </div>
+
+    <div class="quiz-actions">
+      <button class="btn btn-ghost" id="btn-quiz-prev" disabled>&larr; Précédent</button>
+      <button class="btn btn-primary" id="btn-quiz-next" disabled>Suivant &rarr;</button>
+    </div>
+  </section>
+
+  <!-- ======================= RESULTATS ======================= -->
+  <section class="page" id="page-results" aria-labelledby="results-title">
+    <div class="results-card">
+      <span class="results-badge" id="results-badge">🥉</span>
+      <h1 id="results-title">Série terminée !</h1>
+      <p class="results-score" id="results-score">8 / 10</p>
+      <p class="results-message" id="results-message">Bon travail, continuez comme ça.</p>
+      <div class="results-actions">
+        <button class="btn btn-ghost" id="btn-results-retry">Recommencer</button>
+        <button class="btn btn-primary" id="btn-results-dashboard">Voir mon progrès</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= REVISIONS ======================= -->
+  <section class="page" id="page-revisions" aria-labelledby="revisions-title">
+    <h1 id="revisions-title">Révisions</h1>
+    <p class="page-lede">Repassez en revue toutes les notions, sans chronomètre ni score, ou recherchez une question précise.</p>
+
+    <div class="revisions-toolbar">
+      <label class="visually-hidden" for="revisions-search">Rechercher une question</label>
+      <input type="search" id="revisions-search" placeholder="Rechercher une question (ex : phishing, DNS, mot de passe...)" aria-label="Rechercher une question">
+      <select id="revisions-filter" aria-label="Filtrer par série">
+        <option value="all">Toutes les séries</option>
+        <option value="serie1">Série 1 · Bases</option>
+        <option value="serie2">Série 2 · Réseaux</option>
+        <option value="serie3">Série 3 · Menaces</option>
+        <option value="serie4">Série 4 · Protection</option>
+        <option value="serie5">Série 5 · Fondamentaux</option>
+        <option value="wrong">Seulement mes erreurs</option>
+      </select>
+    </div>
+
+    <div class="revision-list" id="revision-list"><!-- injecté en JS --></div>
+  </section>
+
+  <!-- ======================= CERTIFICAT ======================= -->
+  <section class="page" id="page-certificate" aria-labelledby="certificate-title">
+    <div class="certificate-wrap">
+      <div class="certificate" id="certificate-render">
+        <p class="certificate-kicker">CyberBase &middot; Certificat de réussite</p>
+        <h1 id="certificate-title">Fondamentaux de la cybersécurité</h1>
+        <p class="certificate-line">Décerné à</p>
+        <p class="certificate-name" id="certificate-name">Votre nom</p>
+        <p class="certificate-line">pour avoir obtenu un score de</p>
+        <p class="certificate-score" id="certificate-score">0%</p>
+        <p class="certificate-line" id="certificate-date">Date</p>
+      </div>
+      <div class="certificate-form no-print">
+        <label for="certificate-name-input">Nom à afficher sur le certificat</label>
+        <input type="text" id="certificate-name-input" placeholder="Ex. Aminata Diop">
+        <div class="certificate-actions">
+          <button class="btn btn-primary" id="btn-print-certificate">Imprimer / enregistrer en PDF</button>
+          <button class="btn btn-ghost" data-target="page-dashboard">Retour au tableau de bord</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer no-print">
+  <p>CyberBase — parcours d'initiation à la cybersécurité. Vos données restent sur cet appareil (localStorage), rien n'est envoyé à un serveur.</p>
+</footer>
+
+<div class="toast" id="toast" role="alert" aria-live="assertive" hidden></div>
+
+<script src="script.js"></script>
+<script>
+  // Enregistrement du service worker (PWA hors-ligne) — n'échoue jamais
+  // silencieusement l'affichage du site si le navigateur ne le supporte pas.
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("service-worker.js").catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>
